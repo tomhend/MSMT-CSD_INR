@@ -1,0 +1,25 @@
+name: nesh310
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - cython
+  - ca-certificates
+  - openssl
+  - numpy
+  - jupyterlab
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=11.8
+  - certifi
+  - nibabel
+  - mrtrix3
+  - ipympl
+  - wandb
+  - dipy
+  - black
+  - pytest
+  - pillow
+  - seaborn
+prefix: /home/tom/mambaforge/envs/nesh310
