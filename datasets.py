@@ -19,6 +19,20 @@ def create_input_space(width: int, height: int, depth: int) -> torch.Tensor:
 
     return input_tensor.reshape(width, height, depth, 3)
 
+def create_input_space_prop(width: int, height: int, depth: int) -> torch.Tensor:
+    dims = np.array([width, height, depth])
+    max_dim = np.max(dims)
+    p_size = 2 / max_dim
+
+    sizes = p_size*(dims - 1)
+
+    x = torch.linspace(-sizes[0]/2, sizes[0]/2, width)
+    y = torch.linspace(-sizes[1]/2, sizes[1]/2, height)
+    z = torch.linspace(-sizes[2]/2, sizes[2]/2, depth)
+
+    input_tensor = torch.cartesian_prod(x, y, z)
+
+    return input_tensor.reshape(width, height, depth, 3)
 
 def get_dwi_indices(bvals: np.array, bval: float, delta: float):
     bval_low = bval - delta
@@ -81,7 +95,7 @@ class SingleShellDataset(DiffusionDataset):
 
         self.cart_bvecs = parse_bvecs(bvec_path)[self.dwi_idx]  # remove b0
         # Separate into function for generating input coordinates
-        self.input_tensor = create_input_space(width, height, depth)
+        self.input_tensor = create_input_space_prop(width, height, depth)
 
         self.scale_value = np.percentile(output_array, 99) if scale else 1
         output_array = output_array / self.scale_value
@@ -181,7 +195,7 @@ class MultiShellDataset(Dataset):
         self.cart_bvecs = all_bvecs[used]
 
         width, height, depth, n_grad = output_array.shape
-        self.input_tensor = create_input_space(width, height, depth)
+        self.input_tensor = create_input_space_prop(width, height, depth)
 
         if mask_path:
             mask_data = nib.load(mask_path).get_fdata().astype(int)

@@ -11,7 +11,7 @@ from tqdm import tqdm
 from pathlib import Path
 from output_calculators import OutputCalculator
 from utils import spherical_to_cartesian, parse_bvals, parse_mrtrix
-from datasets import create_input_space, DiffusionDataset
+from datasets import create_input_space, DiffusionDataset, create_input_space_prop
 from dataclasses import dataclass
 
 
@@ -80,7 +80,7 @@ class Trainer:
 
     def log_progress_image(self) -> None:
         width, height, depth = self.data_shape
-        input_coords = create_input_space(width, height, depth)
+        input_coords = create_input_space_prop(width, height, depth)
         input_coords = (
             input_coords[:, :, self.slice_id].reshape(width * height, 3).to(self.device)
         )
@@ -104,7 +104,7 @@ class Trainer:
         grad_img = nifti_img.get_fdata()
         width, height, depth = grad_img.shape[:3]
 
-        input_coords = create_input_space(width, height, depth)
+        input_coords = create_input_space_prop(width, height, depth)
         input_coords = input_coords.reshape(width * height * depth, 3).to(self.device)
 
         coeff_outputs = []
