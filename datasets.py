@@ -34,6 +34,23 @@ def create_input_space_prop(width: int, height: int, depth: int) -> torch.Tensor
 
     return input_tensor.reshape(width, height, depth, 3)
 
+def create_input_space_prop_upsampled(
+    train_width: int, train_height: int, train_depth: int,
+    pred_width: int, pred_height: int, pred_depth: int
+) -> torch.Tensor:
+
+    train_dims = np.array([train_width, train_height, train_depth])
+    max_dim = np.max(train_dims)
+    p_size = 2 / max_dim
+    sizes = p_size * (train_dims - 1)
+
+    x = torch.linspace(-sizes[0] / 2, sizes[0] / 2, pred_width)
+    y = torch.linspace(-sizes[1] / 2, sizes[1] / 2, pred_height)
+    z = torch.linspace(-sizes[2] / 2, sizes[2] / 2, pred_depth)
+
+    input_tensor = torch.cartesian_prod(x, y, z)
+    return input_tensor.reshape(pred_width, pred_height, pred_depth, 3)
+
 def get_dwi_indices(bvals: np.array, bval: float, delta: float):
     bval_low = bval - delta
     bval_high = bval + delta
