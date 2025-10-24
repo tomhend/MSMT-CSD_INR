@@ -1,0 +1,10 @@
+MRtrix version: 3.0.4
+Eigen version: 3.4.0
+FSL version: 6.0.7.17
+Python version: 3.10.16
+Python library versions:
+nibabel                        5.3.2
+numpy                          2.0.2
+tensorflow                     2.18.0
+tensorflow-io-gcs-filesystem   0.37.1
+torch                          2.6.0
